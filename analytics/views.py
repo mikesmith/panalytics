@@ -7,10 +7,10 @@ import re
 JAVASCRIPT = """(function(){var w=window,d=document,
     i=new Image,e=encodeURIComponent;i.src='%s/a.gif?url='+e(d.location.href)+
     '&ref='+e(d.referrer)+'&t='+e(d.title)+'&wiw='+e(w.innerWidth)+'&wih='
-    +e(w.innerHeight);})()""".replace('\n', '')
+    +e(w.innerHeight);})()""".replace('\n', '').replace('    ', '')
 
 # Transparent 1x1 GIF Pixel
-PIXEL = b64decode('R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')
+PXL = b64decode('R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')
 
 
 def script(request):
@@ -64,6 +64,6 @@ def collect(request):
     print(f'referer = {referer}')
     print(f'Unique Visit = {unique_visit}')
 
-    response = HttpResponse(PIXEL, content_type='image/gif')
+    response = HttpResponse(PXL, content_type='image/gif')
     response['Cache-Control'] = 'private, no-cache'
     return response
