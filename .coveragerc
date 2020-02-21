@@ -1,0 +1,9 @@
+[run]
+branch = True
+omit =
+    # omit everything in /venv
+    venv/*
+    # omit all test files
+    *test*
+    # omit all __init__ files
+    *__init__*

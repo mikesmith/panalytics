@@ -6,6 +6,13 @@ __pycache__/
 # SQLite database files
 *.sqlite3
 
+# pytest
+.pytest_cache
+
+# coverage
+.coverage
+htmlcov
+
 # Environments
 venv
 .env
