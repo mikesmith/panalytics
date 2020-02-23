@@ -2,6 +2,26 @@ from django.db import models
 from urllib.parse import urlparse
 import re
 
+from .utils import get_tracking_id
+
+
+class Project(models.Model):
+    name = models.CharField(max_length=30, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    tid = models.CharField(
+        max_length=12,
+        null=True,
+        blank=True,
+        unique=True
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.tid:
+            self.tid = get_tracking_id()
+            while Project.objects.filter(tid=self.tid).exists():
+                self.tid = get_tracking_id()
+        super().save(*args, **kwargs)
+
 
 class PageView(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
