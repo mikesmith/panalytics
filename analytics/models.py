@@ -22,9 +22,25 @@ class Project(models.Model):
                 self.tid = get_tracking_id()
         super().save(*args, **kwargs)
 
+    @staticmethod
+    def is_valid_tracking_id(tid):
+        if not tid:
+            return False
+
+        if not re.match(r'PA-[A-Z0-9]{9}$', tid):
+            return False
+
+        if not Project.objects.filter(tid=tid).exists():
+            return False
+
+        return True
+
 
 class PageView(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
+    project = models.ForeignKey(Project,
+                                on_delete=models.CASCADE,
+                                related_name='pageviews')
     protocol = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
     path = models.CharField(max_length=255, blank=True)
@@ -37,6 +53,7 @@ class PageView(models.Model):
 
     @staticmethod
     def create_from_request(request):
+        project = Project.objects.get(tid=request.GET.get('tid'))
         parsed_url = urlparse(request.GET.get('url'))
         ref = request.GET.get('ref')
 
@@ -51,6 +68,7 @@ class PageView(models.Model):
         referer = ref or source
 
         return PageView.objects.create(
+            project=project,
             protocol=parsed_url.scheme,
             domain=parsed_url.netloc,
             path=parsed_url.path,

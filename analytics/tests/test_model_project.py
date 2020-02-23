@@ -47,3 +47,27 @@ def test_project_save_get_new_tid_if_duplicate_exists(
     assert mock_get_tracking_id.call_count == 2
     assert mock_model_save.call_count == 1
     assert project.tid == 'newertrackid'
+
+
+@patch('analytics.models.Project.objects')
+def test_is_valid_tracking_id_true_when_valid(mock_objects):
+    mock_objects.filter.return_value.exists.return_value = True
+    assert Project.is_valid_tracking_id('PA-TESTTRACK')
+
+
+@patch('analytics.models.Project.objects')
+def test_is_valid_tracking_id_false_when_tid_not_exist(mock_objects):
+    mock_objects.filter.return_value.exists.return_value = False
+    assert not Project.is_valid_tracking_id('PA-TESTTRACK')
+
+
+def test_is_valid_Tracking_id_false_when_none():
+    assert not Project.is_valid_tracking_id(None)
+
+
+def test_is_valid_Tracking_id_false_when_incorrect_format():
+    assert not Project.is_valid_tracking_id('BADTESTTRACK')
+
+
+def test_is_valid_Tracking_id_false_when_too_many_chars():
+    assert not Project.is_valid_tracking_id('PA-TESTTRACK2')
