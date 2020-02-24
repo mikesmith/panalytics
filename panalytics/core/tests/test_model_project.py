@@ -4,7 +4,7 @@ from ..models import Project
 
 
 @patch('django.db.models.Model.save')
-@patch('analytics.models.get_tracking_id')
+@patch('panalytics.core.models.get_tracking_id')
 def test_project_save_skips_new_tid_if_given(
     mock_get_tracking_id, mock_model_save
 ):
@@ -16,8 +16,8 @@ def test_project_save_skips_new_tid_if_given(
 
 
 @patch('django.db.models.Model.save')
-@patch('analytics.models.Project.objects')
-@patch('analytics.models.get_tracking_id')
+@patch('panalytics.core.models.Project.objects')
+@patch('panalytics.core.models.get_tracking_id')
 def test_project_save_gets_tid_if_not_given(
     mock_get_tracking_id, mock_objects, mock_model_save
 ):
@@ -33,8 +33,8 @@ def test_project_save_gets_tid_if_not_given(
 
 
 @patch('django.db.models.Model.save')
-@patch('analytics.models.Project.objects')
-@patch('analytics.models.get_tracking_id')
+@patch('panalytics.core.models.Project.objects')
+@patch('panalytics.core.models.get_tracking_id')
 def test_project_save_get_new_tid_if_duplicate_exists(
     mock_get_tracking_id, mock_objects, mock_model_save
 ):
@@ -49,13 +49,13 @@ def test_project_save_get_new_tid_if_duplicate_exists(
     assert project.tid == 'newertrackid'
 
 
-@patch('analytics.models.Project.objects')
+@patch('panalytics.core.models.Project.objects')
 def test_is_valid_tracking_id_true_when_valid(mock_objects):
     mock_objects.filter.return_value.exists.return_value = True
     assert Project.is_valid_tracking_id('PA-TESTTRACK')
 
 
-@patch('analytics.models.Project.objects')
+@patch('panalytics.core.models.Project.objects')
 def test_is_valid_tracking_id_false_when_tid_not_exist(mock_objects):
     mock_objects.filter.return_value.exists.return_value = False
     assert not Project.is_valid_tracking_id('PA-TESTTRACK')
