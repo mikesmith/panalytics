@@ -4,8 +4,8 @@ from unittest.mock import patch
 from ..views import collect, PXL
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_calls_create_from_request_when_dnt_disabled_url_exists(
     mock_create_from_request, mock_is_valid_tracking_id
 ):
@@ -20,8 +20,8 @@ def test_collect_calls_create_from_request_when_dnt_disabled_url_exists(
     assert mock_create_from_request.call_args[0] == (request,)
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_calls_create_from_request_when_dnt_not_given_url_exists(
     mock_create_from_request, mock_is_valid_tracking_id
 ):
@@ -35,8 +35,8 @@ def test_collect_calls_create_from_request_when_dnt_not_given_url_exists(
     assert mock_create_from_request.call_args[0] == (request,)
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_does_not_call_create_from_request_when_dnt_enabled_url_exists(
     mock_create_from_request, mock_is_valid_tracking_id
 ):
@@ -50,8 +50,8 @@ def test_collect_does_not_call_create_from_request_when_dnt_enabled_url_exists(
     assert mock_create_from_request.call_count == 0
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_does_not_call_create_from_request_when_url_not_given(
     mock_create_from_request, mock_is_valid_tracking_id
 ):
@@ -62,8 +62,8 @@ def test_collect_does_not_call_create_from_request_when_url_not_given(
     assert mock_create_from_request.call_count == 0
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_does_not_call_create_from_request_when_tid_not_given(
     mock_create_from_request, mock_is_valid_tracking_id
 ):
@@ -74,8 +74,8 @@ def test_collect_does_not_call_create_from_request_when_tid_not_given(
     assert mock_create_from_request.call_count == 0
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_returns_correct_response_with_valid_request(
     mock_create_from_request, mock_is_valid_tracking_id
 ):
@@ -92,8 +92,8 @@ def test_collect_returns_correct_response_with_valid_request(
     assert response['cache-control'] == 'private, no-cache'
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_returns_correct_response_with_dnt_enabled(
     mock_create_from_request, mock_is_valid_tracking_id
 ):
@@ -110,8 +110,8 @@ def test_collect_returns_correct_response_with_dnt_enabled(
     assert response['cache-control'] == 'private, no-cache'
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_returns_correct_response_with_missing_url(
     mock_create_from_request, mock_is_valid_tracking_id
 ):
@@ -125,8 +125,8 @@ def test_collect_returns_correct_response_with_missing_url(
     assert response['cache-control'] == 'private, no-cache'
 
 
-@patch('analytics.models.Project.is_valid_tracking_id')
-@patch('analytics.models.PageView.create_from_request')
+@patch('panalytics.core.models.Project.is_valid_tracking_id')
+@patch('panalytics.core.models.PageView.create_from_request')
 def test_collect_returns_correct_response_with_invalid_tid(
     mock_create_from_request, mock_is_valid_tracking_id
 ):

@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                 ('window_height', models.PositiveIntegerField()),
                 ('referer', models.TextField(blank=True)),
                 ('unique_visit', models.BooleanField()),
-                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pageviews', to='analytics.Project')),
+                ('project', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='pageviews', to='core.Project')),
             ],
         ),
     ]
