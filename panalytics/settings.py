@@ -105,5 +105,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Admin Site URL
+ADMIN_URL = config('ADMIN_URL', default='admin/')
+
 # Domain that is inserted into Javascript
 ANALYTICS_HOST = config('ANALYTICS_HOST', default='http://127.0.0.1:8000')
