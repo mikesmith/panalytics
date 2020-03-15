@@ -35,6 +35,9 @@ class Project(models.Model):
 
         return True
 
+    def __str__(self):
+        return self.name
+
 
 class PageView(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
