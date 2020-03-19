@@ -1,4 +1,5 @@
 from unittest.mock import patch
+from django.utils import timezone
 
 from ..models import Project
 
@@ -71,3 +72,69 @@ def test_is_valid_Tracking_id_false_when_incorrect_format():
 
 def test_is_valid_Tracking_id_false_when_too_many_chars():
     assert not Project.is_valid_tracking_id('PA-TESTTRACK2')
+
+
+@patch('panalytics.core.models.PageView.objects')
+def test_view_count_no_days(m_queryset):
+    m_queryset.filter.return_value = m_queryset
+    m_queryset.count.return_value = 3
+    project = Project(name='test')
+
+    count = project.view_count()
+
+    args, kwargs = m_queryset.filter.call_args
+    assert count == 3
+    assert m_queryset.filter.call_count == 1
+    assert kwargs['project'] == project
+
+
+@patch('panalytics.core.models.PageView.objects')
+def test_view_count_with_days(m_queryset):
+    m_queryset.filter.return_value = m_queryset
+    m_queryset.count.return_value = 3
+    project = Project(name='test')
+    old_day_ago = timezone.now() - timezone.timedelta(days=1)
+
+    count = project.view_count(days=1)
+
+    new_day_ago = timezone.now() - timezone.timedelta(days=1)
+    arg_list = m_queryset.filter.call_args_list
+    assert count == 3
+    assert m_queryset.filter.call_count == 2
+    assert arg_list[0][1]['project'] == project
+    assert arg_list[1][1]['timestamp__gte'] >= old_day_ago
+    assert arg_list[1][1]['timestamp__gte'] <= new_day_ago
+
+
+@patch('panalytics.core.models.PageView.objects')
+def test_unique_view_count_no_days(m_queryset):
+    m_queryset.filter.return_value = m_queryset
+    m_queryset.count.return_value = 3
+    project = Project(name='test')
+
+    count = project.unique_view_count()
+
+    args, kwargs = m_queryset.filter.call_args
+    assert count == 3
+    assert m_queryset.filter.call_count == 1
+    assert kwargs['project'] == project
+    assert kwargs['unique_visit']
+
+
+@patch('panalytics.core.models.PageView.objects')
+def test_unique_view_count_with_days(m_queryset):
+    m_queryset.filter.return_value = m_queryset
+    m_queryset.count.return_value = 3
+    project = Project(name='test')
+    old_day_ago = timezone.now() - timezone.timedelta(days=1)
+
+    count = project.unique_view_count(days=1)
+
+    new_day_ago = timezone.now() - timezone.timedelta(days=1)
+    arg_list = m_queryset.filter.call_args_list
+    assert count == 3
+    assert m_queryset.filter.call_count == 2
+    assert arg_list[0][1]['project'] == project
+    assert arg_list[0][1]['unique_visit']
+    assert arg_list[1][1]['timestamp__gte'] >= old_day_ago
+    assert arg_list[1][1]['timestamp__gte'] <= new_day_ago

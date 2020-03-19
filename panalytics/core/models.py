@@ -1,5 +1,7 @@
 from django.db import models
 from urllib.parse import urlparse
+from django.utils import timezone
+from django.db.models import Count
 import re
 
 from .utils import get_tracking_id
@@ -21,6 +23,26 @@ class Project(models.Model):
             while Project.objects.filter(tid=self.tid).exists():
                 self.tid = get_tracking_id()
         super().save(*args, **kwargs)
+
+    def view_count(self, days=None):
+        q = PageView.objects.filter(project=self)
+        if days:
+            days_ago = timezone.now() - timezone.timedelta(days=days)
+            q = q.filter(timestamp__gte=days_ago)
+        return q.count()
+
+    def unique_view_count(self, days=None):
+        q = PageView.objects.filter(project=self, unique_visit=True)
+        if days:
+            days_ago = timezone.now() - timezone.timedelta(days=days)
+            q = q.filter(timestamp__gte=days_ago)
+        return q.count()
+
+    def top_path(self):
+        path_values = PageView.objects.filter(project=self.pk).values('path')
+        q = path_values.annotate(count=Count('path')).order_by('-count')
+        path_list = [(x['path'], x['count']) for x in q]
+        return path_list[0]
 
     @staticmethod
     def is_valid_tracking_id(tid):
