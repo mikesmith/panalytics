@@ -38,11 +38,12 @@ class Project(models.Model):
             q = q.filter(timestamp__gte=days_ago)
         return q.count()
 
-    def top_path(self):
+    def top_paths(self):
+        """Return top five visited paths determined by total view count."""
         path_values = PageView.objects.filter(project=self.pk).values('path')
         q = path_values.annotate(count=Count('path')).order_by('-count')
-        path_list = [(x['path'], x['count']) for x in q]
-        return path_list[0]
+        path_list = [(x['count'], x['path']) for x in q]
+        return path_list[:5]
 
     @staticmethod
     def is_valid_tracking_id(tid):

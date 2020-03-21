@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 
 from .models import PageView, Project
 
@@ -23,7 +24,7 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'tid', 'unique_view_count', 'view_count',
                     'single_day_view_count', 'seven_day_view_count',
-                    'thirty_day_view_count', 'top_path')
+                    'thirty_day_view_count', 'top_paths')
 
     def single_day_view_count(self, obj):
         return obj.view_count(days=1)
@@ -37,10 +38,11 @@ class ProjectAdmin(admin.ModelAdmin):
         return obj.view_count(days=30)
     thirty_day_view_count.short_description = '30 Days'
 
-    def top_path(self, obj):
-        path, count = obj.top_path()
-        return f'{count} - "{path}"'
-    top_path.short_description = 'Most Visited (C-P)'
+    def top_paths(self, obj):
+        value = '<br>'.join([f'{c} - {p}' for c, p in obj.top_paths()])
+        return format_html(value)
+    top_paths.short_description = 'Most Visited (C-P)'
+    top_paths.allow_tags = True
 
 
 class PageViewAdmin(ReadOnlyAdmin):
