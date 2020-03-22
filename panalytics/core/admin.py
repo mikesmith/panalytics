@@ -22,10 +22,18 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
 
 class ProjectAdmin(admin.ModelAdmin):
-    exclude = ['tid']
     list_display = ('name', 'tid', 'unique_view_count', 'view_count',
                     'single_day_view_count', 'seven_day_view_count',
                     'thirty_day_view_count', 'top_paths')
+
+    # Remove the Tracking ID (tid) from the project admin add page to prevent
+    # user from overriding the auto generated ID on model save().
+    def get_fields(self, request, obj=None):
+        fields = list(super(ProjectAdmin, self).get_fields(request, obj))
+        exclude_set = set()
+        if not obj:  # obj will be None on the add page
+            exclude_set.add('tid')
+        return [f for f in fields if f not in exclude_set]
 
     def single_day_view_count(self, obj):
         return obj.view_count(days=1)
