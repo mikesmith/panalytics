@@ -22,6 +22,7 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
 
 class ProjectAdmin(admin.ModelAdmin):
+    exclude = ['tid']
     list_display = ('name', 'tid', 'unique_view_count', 'view_count',
                     'single_day_view_count', 'seven_day_view_count',
                     'thirty_day_view_count', 'top_paths')
