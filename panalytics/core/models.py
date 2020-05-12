@@ -1,8 +1,10 @@
-from django.db import models
-from urllib.parse import urlparse
-from django.utils import timezone
-from django.db.models import Count
 import re
+
+from django.db import models
+from django.db.models import Count
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
+from urllib.parse import urlparse
 
 from .utils import get_tracking_id
 
@@ -79,7 +81,7 @@ class PageView(models.Model):
 
     @staticmethod
     def create_from_request(request):
-        project = Project.objects.get(tid=request.GET.get('tid'))
+        project = get_object_or_404(Project, tid=request.GET.get('tid'))
         parsed_url = urlparse(request.GET.get('url'))
         ref = request.GET.get('ref')
 
