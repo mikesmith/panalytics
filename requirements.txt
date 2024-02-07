@@ -1,4 +1,4 @@
-Django==3.1.13
+Django==3.2.24
 pytest-django==3.8.0
 python-decouple==3.3
 coverage==5.0.3
